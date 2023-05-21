@@ -38,5 +38,5 @@ def workdir_view(request):
     current_directory = os.getcwd()
     files = os.listdir(current_directory)
 
-    return files
+    return HttpResponse(files)
     # raise NotImplemented
