@@ -22,25 +22,31 @@ DATA = {
 
 
 def home(request):
-    # template_name = 'calculator/index.html'
-    # return render(request, template_name)
-    return
+    template_name = 'calculator/home.html'
+    servings = request.GET.get('servings', 1)  # Получаем значение servings из GET-параметров формы
+    context = {
+        'DATA': DATA,
+        'servings': servings,
+    }
+    return render(request, template_name, context)
 
 
 def recipe(request, food):
     servings = int(request.GET.get('servings', 1))
-    print(servings)
-    # if food:
-    #     content = DATA[food]
+
     context = {
         'recipe': DATA[food],
-        'servings': int(servings),
+        'servings': servings,
         'multiplied_amounts': {
-            ingredient: float(amount) * servings
+            ingredient: round(float(amount) * servings, 2)
             for ingredient, amount in DATA[food].items()
-            if isinstance(amount, (int, float))}
+            if isinstance(amount, (int, float))
+        }
     }
+
     return render(request, 'calculator/index.html', context)
+
+
 
 
 # Напишите ваш обработчик. Используйте DATA как источник данных
