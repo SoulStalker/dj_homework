@@ -28,14 +28,17 @@ def home(request):
 
 
 def recipe(request, food):
-    servings = request.GET.get('servings', 1)
+    servings = int(request.GET.get('servings', 1))
     print(servings)
     # if food:
     #     content = DATA[food]
     context = {
         'recipe': DATA[food],
         'servings': int(servings),
-        'multiplied_amounts': {ingredient: amount * servings for ingredient, amount in DATA[food].items()}
+        'multiplied_amounts': {
+            ingredient: float(amount) * servings
+            for ingredient, amount in DATA[food].items()
+            if isinstance(amount, (int, float))}
     }
     return render(request, 'calculator/index.html', context)
 
