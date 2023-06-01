@@ -52,11 +52,13 @@ MIDDLEWARE = [
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'netology_models_list',
-        'HOST': '127.0.0.1',
+        'HOST': '194.186.153.214',
         'PORT': '5432',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
     }
 }
 
