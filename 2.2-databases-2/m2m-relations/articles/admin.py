@@ -1,8 +1,17 @@
 from django.contrib import admin
+from .models import Tag, Article, Scope
 
-from .models import Article
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Scope)
+class ScopeAdmin(admin.ModelAdmin):
     pass
