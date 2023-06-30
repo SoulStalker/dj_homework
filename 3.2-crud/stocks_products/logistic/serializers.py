@@ -36,7 +36,5 @@ class StockSerializer(serializers.ModelSerializer):
         StockProduct.objects.filter(stock=instance).delete()
         for position_data in positions_data:
             StockProduct.objects.create(stock=instance, **position_data)
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
+        super().update(instance, validated_data)
         return instance
