@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from advertisements.models import Advertisement
+from advertisements.models import Advertisement, AdvertisementStatusChoices
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -9,8 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name',
-                  'last_name',)
+        fields = ('id', 'username', 'first_name', 'last_name',)
 
 
 class AdvertisementSerializer(serializers.ModelSerializer):
@@ -22,8 +21,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Advertisement
-        fields = ('id', 'title', 'description', 'creator',
-                  'status', 'created_at', )
+        fields = ('id', 'title', 'description', 'creator',  'status', 'created_at', )
 
     def create(self, validated_data):
         """Метод для создания"""
@@ -40,6 +38,17 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     def validate(self, data):
         """Метод для валидации. Вызывается при создании и обновлении."""
 
-        # TODO: добавьте требуемую валидацию
+        user = self.context["request"].user
+
+        if self.instance and self.instance.creator != user:
+            raise serializers.ValidationError("Вы не можете изменять это объявление.")
+
+        if data.get('status') == AdvertisementStatusChoices.DRAFT and data.get('creator') != user:
+            raise serializers.ValidationError("Вы не можете создавать черновики от имени другого пользователя.")
+
+        if data.get('status') == AdvertisementStatusChoices.OPEN:
+            open_ads_count = Advertisement.objects.filter(creator=user, status=AdvertisementStatusChoices.OPEN).count()
+            if open_ads_count >= 10:
+                raise serializers.ValidationError("Превышено ограничение на количество открытых объявлений.")
 
         return data

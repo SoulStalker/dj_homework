@@ -7,6 +7,7 @@ class AdvertisementStatusChoices(models.TextChoices):
 
     OPEN = "OPEN", "Открыто"
     CLOSED = "CLOSED", "Закрыто"
+    DRAFT = "DRAFT", "Черновик"
 
 
 class Advertisement(models.Model):
@@ -21,6 +22,7 @@ class Advertisement(models.Model):
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
+        related_name='advertisements'
     )
     created_at = models.DateTimeField(
         auto_now_add=True
@@ -28,3 +30,21 @@ class Advertisement(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
+
+    # Добавлено поле favorites для избранных объявлений
+    favorites = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='favorite_ads',
+        blank=True
+    )
+
+    # Добавлено поле draft_author для автора черновика
+    draft_author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
+
+
+
