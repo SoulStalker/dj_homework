@@ -20,8 +20,8 @@ from rest_framework.routers import DefaultRouter
 from advertisements.views import AdvertisementViewSet
 
 router = DefaultRouter()
-router.register('adv', AdvertisementViewSet)
-
+router.register('adv', AdvertisementViewSet, basename='advertisement')
+router.register(r'favorites', AdvertisementViewSet, basename='advertisement-favorites')
 
 urlpatterns = [
     path('api/', include(router.urls)),
